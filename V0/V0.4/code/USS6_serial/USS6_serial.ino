@@ -8,7 +8,7 @@
 
 #include <SD.h>                         // for SD card module
 #include <SPI.h>                        // for SD card and nRF
-#include <Wire.h>                       // for RTC
+#include <Wire.h>                       // for I2C
 #include <HCSR04.h>                     // for the USS
 #include <RF24.h>                       // for the nRF
 #include <DS3232RTC.h>                  // RTC Library https://github.com/JChristensen/DS3232RTC
@@ -27,7 +27,7 @@
 
 
 //RF ----------------------------------------------------------------------------------------------------
-  RF24 radio(CE, CSN); //CE, CSN
+  RF24 radio(CE, CSN); 
   const byte addresses [][6] = {"00001", "00002", "00003", "00004"};  // Package addresses. Transmitter address is 00001, receiver addresses can be configured as 00002-00005
   int command = 0;
   boolean mag_on = false;
@@ -49,7 +49,7 @@
   Adafruit_INA219 ina219;
 
 //control pins
-  //const int LED = 0;
+  const int LED = A3;
   const int magPin = 5;
   const int magPower = 4;
   const int time_interval = 5;  // interval in which the minutes will be delayed
@@ -57,7 +57,7 @@
 void setup() {
     Serial.begin(9600);
     pinMode(pinCS, OUTPUT);            
-    //pinMode(LED, OUTPUT);
+    pinMode(LED, OUTPUT);
     pinMode(trigPin, OUTPUT);
     pinMode(echoPin, INPUT);
     pinMode(RTCinterrupt,INPUT_PULLUP); //Set pin d2 to input using the buildin pullup resistor
@@ -69,18 +69,17 @@ void setup() {
 // nRF24L01 initialization --------------------------------------------------------------------------------------------------------------------------
     radio.begin();
     radio.openWritingPipe(addresses[0]);
-    radio.openReadingPipe(1, addresses[1]);   //Setting the address at which we will receive the data
-    radio.setPALevel(RF24_PA_MAX);       //You can set this as minimum or maximum depending on the distance between the transmitter and receiver.
+    radio.openReadingPipe(1, addresses[1]);       //Setting the address at which we will receive the data. This is receiver package with address 00002
+    radio.setPALevel(RF24_PA_MIN);                //You can set this as minimum or maximum depending on the distance between the transmitter and receiver.
     if (radio.setDataRate(RF24_1MBPS) == true)
       {
          Serial.println("DATA RATE SET");
       }
-    radio.startListening();     //Makes module a receiver
-
+    
 // SD card initialization --------------------------------------------------------------------------------------------------------------------------
    if (!SD.begin())               // tests if SD module began
       {
-        //digitalWrite(LED, HIGH);
+        digitalWrite(LED, HIGH);
         Serial.println("no SD found");
        while(1);                  // LED remains on if SD card does not work
      }
@@ -101,11 +100,17 @@ void setup() {
     RTC.squareWave(SQWAVE_NONE);
     time_t t;                               // create a temporary time variable so we can set the time and read the time from the RTC
     t = RTC.get();                            // Gets the current time of the RTC
-    if(second(t)<55){
-      RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
-    }
+//    if(second(t)<55){
+//      RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
+//    }
+//    else {
+//      RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)-60+time_interval, 0, 0, 0);
+//    }
+    if(minute(t)<55){
+        RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t)+time_interval, 0, 0);
+      }
     else {
-      RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)-60+time_interval, 0, 0, 0);
+        RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t)-60+time_interval, 0, 0);
     }
     // clear the alarm flag
     RTC.alarm(ALARM_1);
@@ -123,41 +128,53 @@ void setup() {
   }
 
 void loop() {
-    //digitalWrite(LED, LOW);
-    delay(10);
+    digitalWrite(LED, LOW);
+    radio.startListening();     //Makes module a receiver
+    delay(100);
     goSleep();
   }
 
 void goSleep(){
     Serial.println("Going to sleep...");
+    just_set = false;
+    delay(100);
     sleep_enable();                               // Enable sleep mode
     attachInterrupt(0, RTCtrigger, LOW);              // attach an interrupt to pin 2 and run the wakeUp() function upon waking
     attachInterrupt(1, nRFtrigger, LOW);
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);          // Set full sleep mode
     sleep_cpu();                                  // Activate sleep mode
-    logData();                                    // Run the logData() function after the wakeUp() function
-    time_t t;
-    t=RTC.get(); 
-    //Set New Alarm
-    if(minute(t)<55){
-        RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t)+time_interval, 0, 0);
+    if(just_set == false) {
+      logData();                                    // Run the logData() function after the wakeUp() function
+      time_t t;
+      t=RTC.get(); 
+      //Set New Alarm
+  //    if(second(t)<55){
+  //      RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
+  //    }
+  //    else {
+  //      RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)-60+time_interval, 0, 0, 0);
+  //    }
+      if(minute(t)<55){
+          RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t)+time_interval, 0, 0);
+        }
+      else {
+          RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t)-60+time_interval, 0, 0);
       }
-    else {
-        RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t)-60+time_interval, 0, 0);
-    }
-    // clear the alarm flag
-    RTC.alarm(ALARM_1);
-   }
+      // clear the alarm flag
+      RTC.alarm(ALARM_1);
+     }
+  }
   
 void RTCtrigger() {
     Serial.println("RTC interrupt fired");
-    delay(1000);
+    delay(100);
     sleep_disable();                        // Disable sleep mode
     detachInterrupt(0);                     // Remove the interrupt from pin 2
 }
 
 void nRFtrigger() {
   Serial.println("nRF interrupt fired");
+  delay(100);
   sleep_disable();
   detachInterrupt(1);
   delay(2000);
@@ -193,6 +210,7 @@ void nRFtrigger() {
 void toggleMag() {
   if(mag_on == true) {
       digitalWrite(magPower, HIGH);
+      delay(1500);
       for (int i = 0; i < 30; i++)
         {
           digitalWrite(magPin, HIGH);
@@ -201,6 +219,8 @@ void toggleMag() {
           delay(18);
         }
         Serial.println("Mag on");
+        delay(2000);
+        digitalWrite(magPower, LOW);
     }
     else if(mag_on == false) {
       digitalWrite(magPower, HIGH);
@@ -212,12 +232,13 @@ void toggleMag() {
           delay(19);
         }
         Serial.println("Mag off");
+        delay(4000);
+        digitalWrite(magPower, LOW);
     }
-    digitalWrite(magPower, LOW);
 }
 
 void logData() {
-      //digitalWrite(LED, HIGH);    
+      digitalWrite(LED, HIGH);    
       delay(10);
       
     // for the USS Module
@@ -253,7 +274,7 @@ void logData() {
 //      }
 
     // Now print the data to the file that will be saved on the SD card
-      File myFile = SD.open("001.csv", FILE_WRITE);
+      File myFile = SD.open("002.csv", FILE_WRITE);
 
       if (myFile)                         // tests if the file has opened
         {
@@ -294,10 +315,10 @@ void logData() {
         }
       else
         {
-          //digitalWrite(LED, HIGH);         // if the file doesn't open indicate with the LED 
+          digitalWrite(LED, HIGH);         // if the file doesn't open indicate with the LED 
           while(1);
         }
   delay(100);
- //digitalWrite(LED, LOW);
+  digitalWrite(LED, LOW);
   
 }
