@@ -3,8 +3,8 @@
    Open the Serial monitor and follow instructions to toggle EPM on or off
 */
 
-int PC = 5;         //enables the magnet control circuit
-int MAG = 3;        //sends a PWM signal to the magnet
+int PC = 4;         //enables the magnet control circuit
+int MAG = 5;        //sends a PWM signal to the magnet
 String command;     //stores the user's command
 
 void setup() {
@@ -12,6 +12,7 @@ void setup() {
   Serial.begin(9600);
   pinMode(PC, OUTPUT);
   pinMode(MAG, OUTPUT);
+  Serial.println("Executing magnet_toggle.ino");
   Serial.println("Type in the Serial command line what you want to do: \n toggle magnet on: \"ON\" \n toggle magnet off: \"OFF\" ");
 
 }
@@ -25,7 +26,7 @@ void loop() {
     //ON CODE
     if (command.equals("ON")) {
       digitalWrite(PC, HIGH);
-      delay(500);
+      delay(1500);
       for (int i = 0; i < 30; i++) {
         digitalWrite(MAG, HIGH);
         delay(2);
@@ -33,10 +34,13 @@ void loop() {
         delay(18);
       }
       Serial.println("Magnet on");
+      delay(2000);
     }
 
     //OFF CODE
     else if (command.equals("OFF")) {
+      digitalWrite(PC, HIGH);
+      delay(1500);
       for (int i = 0; i < 30; i++)
       {
         digitalWrite(MAG, HIGH);
@@ -45,10 +49,13 @@ void loop() {
         delay(19);
       }
       Serial.println("Magnet off");
+      delay(5000);
     }
 
     else {
       Serial.println("Command not recognized");
     }
+    
+    digitalWrite(PC, LOW);
   }
 }
