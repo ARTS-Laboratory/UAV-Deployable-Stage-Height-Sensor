@@ -1,8 +1,5 @@
-## USS6
-1. Main program for package
-
-## USS6_serial
-1. Main program with serial communication, used for debugging
+## data_collection
+1. Main program for base package with serial communication
 
 ## clock_calibration
 1. Calibrates the DS3231 to compiling time or a user defined time
