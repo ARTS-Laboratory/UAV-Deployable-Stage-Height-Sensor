@@ -6,7 +6,7 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-RF24 radio(10, 9); // CE, CSN
+RF24 radio(9,10); // CE, CSN
 const byte addresses [][6] = {"00001", "00002", "00003", "00004", "00005"};  // Package addresses. Transmitter address is 00001, receiver addresses can be configured as 00002-00005
 
 // control buttons
@@ -43,6 +43,7 @@ void setup() {
   radio.begin();                                 // start the radio communication
   radio.openReadingPipe(1, addresses[0]);        // set the address at which we will receive the data as 00001
   radio.setPALevel(RF24_PA_MIN);                 // can be set as minimum or maximum depending on the distance between the transmitter and receiver
+  Serial.println("Executing rf_controller.ino");
 }
 
 
@@ -95,18 +96,28 @@ void loop()  {
   command = 0;
   on_button = digitalRead(on_pin);
   off_button = digitalRead(off_pin);
+
+  // send the ON command if the on button is pressed
   if (on_button == HIGH) {
     command = 2;
-    radio.write(&command, sizeof(command));     // send the on command
+    delay(1000);                                // allow time to reassign the variable
+    radio.write(&command, sizeof(command));     
+    delay(5000);                                // delay ensures a button is not read twice
+    Serial.print("Sent: "); Serial.println(command);
   }
+  // send the OFF command if the off button is pressed
   else if (off_button == HIGH) {
     command = 3;
-    radio.write(&command, sizeof(command));     // send the off command
+    delay(1000);                                // allow time to reassign the variable
+    radio.write(&command, sizeof(command));     
+    delay(5000);                                // delay ensures a button is not read twice
+    Serial.print("Sent: "); Serial.println(command);
   }
   delay(200);
 }
 
-void sendPing() {                               // validation function to make sure the receiver and transmitter have established communication
+// validation function to make sure the receiver and transmitter have established communication
+void sendPing() {                               
   radio.stopListening();                        // set module as the transmitter
   delay(20);
   command = 1;
@@ -124,4 +135,21 @@ void sendPing() {                               // validation function to make s
     Serial.println("Paring failed, make sure the package addresses are correct and the package is on and in range");            
   }
   delay(2000);
+//radio.stopListening();
+//  delay(20);
+//  command = 1;
+//  radio.write(&command, sizeof(command));
+//  radio.startListening();
+//  delay(20);
+//  if (radio.available()) {
+//    radio.read(&command, sizeof(command));
+//    Serial.println("Ping successful");
+//    radio.stopListening();
+//    ch_set = true;
+//    digitalWrite(status_led, HIGH);
+//  }
+//  else {
+//    Serial.println("paring failed");
+//  }
+//  delay(2000);
 }
