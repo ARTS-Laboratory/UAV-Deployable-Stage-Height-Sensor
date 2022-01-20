@@ -1,7 +1,8 @@
 /*
+ * This sketch is used to set the DS3231 real-time clock. Uncomment the proper line of code to set the RTC.
+ * Ensure the external 3V coin cell is in place to keep the time after compilation.
+ * 
  * Written by Corinne Smith 11-2021
- * Uncomment the proper line of code to set the RTC
- * Ensure the external 3V coin cell is in place to keep the time after compilation
  */
 
 #include <Wire.h>
@@ -15,7 +16,7 @@ void setup () {
   rtc.begin();
 
   // Uncomment to set the date and time of the RTC to when the sketch was compiled
-  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 
   // Uncomment to set the date and time of the RTC to a user defined time
   // format: rtc.adjust(DateTime(yyyy, mm, dd, hh, mm, ss));
