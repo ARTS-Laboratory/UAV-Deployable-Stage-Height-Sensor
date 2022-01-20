@@ -1,22 +1,26 @@
 /*
-  Written by Corinne Smith
-  July 9 2021
-  Modified from ArduinoGetStarted, www.ArduinoGetStarted.com
-  Modified from Dejan Nedelkowski, www.HowToMechatronics.com
-  Modified from ArduinoLearning, www.ArduinoLearning.com
+ * This code is to be uploaded to the base package or solar package. The EPM package uses EPM_data_collection.ino. 
+ * This is the sketch that will run during deployment and take stage, temperature, pressure, humidity, and power
+ * measurements. The data is saved on an SD card and collection occurs every five minutes as dictated by RTC alarms.
+ * 
+ * Written by Corinne Smith
+ * July 9 2021
+ * Modified from ArduinoGetStarted, www.ArduinoGetStarted.com
+ * Modified from Dejan Nedelkowski, www.HowToMechatronics.com
+ * Modified from ArduinoLearning, www.ArduinoLearning.com
 */
 
 #include <SD.h>                         // for SD card module
-#include <SPI.h>                        // for SD card module
+#include <SPI.h>                        // for SPI
 #include <Wire.h>                       // for I2C
 #include <HCSR04.h>                     // for the USS
-#include <DS3232RTC.h>                  // RTC Library https://github.com/JChristensen/DS3232RTC
+#include <DS3232RTC.h>                  // for the RTC https://github.com/JChristensen/DS3232RTC
 #include <avr/sleep.h>                  // for sleep mode
 #include <Adafruit_Sensor.h>            // for BME 
 #include <Adafruit_BME280.h>            // for BME
 #include <Adafruit_INA219.h>            // for voltage monitor
 
-#define RTCinterrupt 2                  // RTC interrupt from sleep mode
+#define RTCinterrupt 2                  // RTC interrupt from sleep mode on digital pin 2
 #define SEALEVELPRESSURE_HPA (1013.25)  // constant for bme
 
 
@@ -36,7 +40,7 @@ Adafruit_INA219 ina219;
 
 //controls ---------------------------------------------------------------------------------------------
 const int LED = A3;
-const int time_interval = 5;                      // interval in which the minutes will be delayed
+const int time_interval = 5;          // interval in which the minutes will be delayed. Default is five minutes
 unsigned long prevTimeElapsed = 0;
 
 void setup() {
@@ -77,20 +81,20 @@ void setup() {
   t = RTC.get();                            
   
   // uncomment to set the time interval units to seconds
-  if(second(t)<55){
-    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
-  }
-  else {
-    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)-60+time_interval, 0, 0, 0);
-  }
-  
-  // uncomment to set the time interval units to minutes
-//  if (minute(t) < 55) {
-//    RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) + time_interval, 0, 0);
+//  if(second(t)<55){
+//    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
 //  }
 //  else {
-//    RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) - 60 + time_interval, 0, 0);
+//    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)-60+time_interval, 0, 0, 0);
 //  }
+  
+  // uncomment to set the time interval units to minutes
+  if (minute(t) < 55) {
+    RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) + time_interval, 0, 0);
+  }
+  else {
+    RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) - 60 + time_interval, 0, 0);
+  }
 
   // clear the alarm flag and configure the interrupt operation
   RTC.alarm(ALARM_1);
@@ -106,7 +110,7 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(LED, LOW);
+  digitalWrite(LED, LOW);     // turn off LED before sleeping
   delay(10);
   goSleep();
 }
@@ -129,31 +133,31 @@ void goSleep() {
   t = RTC.get();
   
   // uncomment to set the time interval units to seconds
-  if(second(t)<55){
-    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
-  }
-  else {
-    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)-60+time_interval, 0, 0, 0);
-  }
-  
-  // uncomment to set the time interval units to minutes
-//  if (minute(t) < 55) {
-//    RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) + time_interval, 0, 0);
+//  if(second(t)<55){
+//    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
 //  }
 //  else {
-//    RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) - 60 + time_interval, 0, 0);
+//    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)-60+time_interval, 0, 0, 0);
 //  }
+  
+  // uncomment to set the time interval units to minutes
+  if (minute(t) < 55) {
+    RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) + time_interval, 0, 0);
+  }
+  else {
+    RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) - 60 + time_interval, 0, 0);
+  }
 
   // clear the alarm flag
   RTC.alarm(ALARM_1);
 }
 
 void RTCtrigger() {
-  // this is the first function to run once the RTC interrupt is fired
+  // this is the wake up function to run once the RTC interrupt is fired
   Serial.println("RTC interrupt fired");
   delay(100);
-  sleep_disable();                        // Disable sleep mode
-  detachInterrupt(RTCinterrupt);          // Remove the interrupt
+  sleep_disable();                        // disable sleep mode
+  detachInterrupt(RTCinterrupt);          // clear the interrupt flag
 }
 
 void logData() {
@@ -231,7 +235,8 @@ void logData() {
   }
   else
   {
-    digitalWrite(LED, HIGH);         // LED will stay on if the file is not opening properly. 
+    Serial.println("Error opening file");
+    digitalWrite(LED, HIGH);                // LED will stay on if the file is not opening properly. 
     while (1);
   }
   delay(100);
