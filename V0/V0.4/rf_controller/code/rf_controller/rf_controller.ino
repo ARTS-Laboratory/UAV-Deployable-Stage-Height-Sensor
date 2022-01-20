@@ -1,13 +1,19 @@
 /*
-   Written by Corinne Smith 11-2021
-   Upload this code to the rf controller
+ * This sketch is uploaded to the RF controller to control the EPM package. This acts as the transmitter 
+ * with address 00001 and can communicate with package addresses 00002-00004 depending on the channel selected.
+ * Each ping value corresponds to an action:
+ *  1 - send a validation ping
+ *  2 - toggle the EPM on
+ *  3 - toggle the EPM off
+ * 
+ * Written by Corinne Smith 11-2021
 */
 
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
 RF24 radio(9,10); // CE, CSN
-const byte addresses [][6] = {"00001", "00002", "00003", "00004", "00005"};  // Package addresses. Transmitter address is 00001, receiver addresses can be configured as 00002-00005
+const byte addresses [][6] = {"00001", "00002", "00003", "00004"};  // Package addresses. Transmitter address is 00001, receiver addresses can be configured as 00002-00004
 
 // control buttons
 int on_pin = 3;
@@ -42,7 +48,7 @@ void setup() {
 
   radio.begin();                                 // start the radio communication
   radio.openReadingPipe(1, addresses[0]);        // set the address at which we will receive the data as 00001
-  radio.setPALevel(RF24_PA_MIN);                 // can be set as minimum or maximum depending on the distance between the transmitter and receiver
+  radio.setPALevel(RF24_PA_MAX);                 // can be set as minimum or maximum depending on the distance between the transmitter and receiver
   Serial.println("Executing rf_controller.ino");
 }
 
@@ -56,7 +62,7 @@ void loop()  {
       digitalWrite(ch3, LOW);
       digitalWrite(ch1, HIGH);
       if (digitalRead(pair_pin) == HIGH) {
-        radio.openWritingPipe(addresses[1]);     // set the address to package 1
+        radio.openWritingPipe(addresses[1]);     // set the receiver address to 00002 (channel 1)
         sendPing();
       }
     }
@@ -65,7 +71,7 @@ void loop()  {
       digitalWrite(ch3, LOW);
       digitalWrite(ch2, HIGH);
       if (digitalRead(pair_pin) == HIGH) {
-        radio.openWritingPipe(addresses[2]);     // set the address to package 2
+        radio.openWritingPipe(addresses[2]);     // set the receiver address to 00003 (channel 2)
         sendPing();
       }
     }
@@ -74,7 +80,7 @@ void loop()  {
       digitalWrite(ch1, LOW);
       digitalWrite(ch3, HIGH);
       if (digitalRead(pair_pin) == HIGH) {
-        radio.openWritingPipe(addresses[3]);     // set the address to package 3
+        radio.openWritingPipe(addresses[3]);     // set the receiver address to 00004 (channel 3)
         sendPing();
       }
     }
@@ -85,15 +91,19 @@ void loop()  {
     }
     delay(50);
   }
-
-  if (digitalRead(pair_pin) == HIGH) {           // used to unpair packages
+  
+  // used to unpair packages
+  if (digitalRead(pair_pin) == HIGH) {           
     digitalWrite(status_led, LOW);
     ch_set = false;
   }
-
-  radio.stopListening();                         // set module as the transmitter
+  
+  // set module as the transmitter
+  radio.stopListening();                         
   delay(5);
   command = 0;
+
+  // check if the on/off buttons are pressed
   on_button = digitalRead(on_pin);
   off_button = digitalRead(off_pin);
 
@@ -116,8 +126,10 @@ void loop()  {
   delay(200);
 }
 
+
+void sendPing() {
 // validation function to make sure the receiver and transmitter have established communication
-void sendPing() {                               
+
   radio.stopListening();                        // set module as the transmitter
   delay(20);
   command = 1;
@@ -135,21 +147,4 @@ void sendPing() {
     Serial.println("Paring failed, make sure the package addresses are correct and the package is on and in range");            
   }
   delay(2000);
-//radio.stopListening();
-//  delay(20);
-//  command = 1;
-//  radio.write(&command, sizeof(command));
-//  radio.startListening();
-//  delay(20);
-//  if (radio.available()) {
-//    radio.read(&command, sizeof(command));
-//    Serial.println("Ping successful");
-//    radio.stopListening();
-//    ch_set = true;
-//    digitalWrite(status_led, HIGH);
-//  }
-//  else {
-//    Serial.println("paring failed");
-//  }
-//  delay(2000);
 }
