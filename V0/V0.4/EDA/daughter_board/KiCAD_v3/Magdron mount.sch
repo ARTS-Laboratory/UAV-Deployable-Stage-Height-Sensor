@@ -14,28 +14,6 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Magdron-mount-rescue:MAG-MAG-Magdron-mount-rescue .1
-U 1 1 60B15368
-P 7250 2450
-F 0 ".1" H 7518 2311 50  0000 L CNN
-F 1 "MAG-MAG" H 7518 2220 50  0000 L CNN
-F 2 "custom:Magnet" H 7250 2100 50  0001 C CNN
-F 3 "" H 7250 2100 50  0001 C CNN
-	1    7250 2450
-	1    0    0    -1  
-$EndComp
-$Comp
-L Magdron-mount-rescue:power_input-ARTS-Lab U1
-U 1 1 60B1605B
-P 1900 2900
-F 0 "U1" H 1900 2301 50  0000 C CNN
-F 1 "power_input" H 1900 2384 39  0000 C CNN
-F 2 "custom:XT60PW" H 1900 2900 50  0001 C CNN
-F 3 "" H 1900 2900 50  0001 C CNN
-	1    1900 2900
-	-1   0    0    1   
-$EndComp
-$Comp
 L Device:R R3
 U 1 1 60B17585
 P 6400 3850
@@ -255,19 +233,6 @@ F 3 "" H 3500 2400 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4250 2700 4800 2700
-$Comp
-L Magdron-mount-rescue:top_rail_v2-ARTS-Lab U4
-U 1 1 60BB9293
-P 4850 3150
-F 0 "U4" H 5278 3188 50  0000 L CNN
-F 1 "top_rail_v2" H 5278 3097 50  0000 L CNN
-F 2 "custom:top_rail_v2" H 4850 3150 50  0001 C CNN
-F 3 "" H 4850 3150 50  0001 C CNN
-	1    4850 3150
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4800 3400 4800 2700
 Wire Wire Line
 	5200 3400 5200 4000
 Wire Wire Line
@@ -280,18 +245,53 @@ Wire Wire Line
 	4700 3400 4700 3750
 Wire Wire Line
 	4600 3400 4600 3850
-Connection ~ 4800 3400
 Wire Wire Line
-	4800 3500 4800 3400
+	4800 2700 4800 3400
 $Comp
-L Magdron-mount-rescue:BME280-ARTS-Lab U2
-U 1 1 60BD1108
+L ARTS-Lab:BME280 U2
+U 1 1 620859A9
 P 3150 3950
 F 0 "U2" V 3565 3667 50  0000 C CNN
 F 1 "BME280" V 3474 3667 50  0000 C CNN
-F 2 "custom:BME280" H 3150 3950 50  0001 C CNN
+F 2 "ARTS-Lab:BME280" H 3150 3950 50  0001 C CNN
 F 3 "" H 3150 3950 50  0001 C CNN
 	1    3150 3950
 	0    -1   -1   0   
 $EndComp
+$Comp
+L ARTS-Lab:power_input U1
+U 1 1 620868C7
+P 1900 2600
+F 0 "U1" H 1900 2749 50  0000 C CNN
+F 1 "power_input" H 1900 2666 39  0000 C CNN
+F 2 "custom:XT60Github" H 1900 2600 50  0001 C CNN
+F 3 "" H 1900 2600 50  0001 C CNN
+	1    1900 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Male J1
+U 1 1 62086F21
+P 7350 2650
+F 0 "J1" H 7322 2674 50  0000 R CNN
+F 1 "Conn_01x03_Male" H 7322 2583 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 7350 2650 50  0001 C CNN
+F 3 "~" H 7350 2650 50  0001 C CNN
+	1    7350 2650
+	-1   0    0    -1  
+$EndComp
+$Comp
+L ARTS-Lab:top_rail_v2 U4
+U 1 1 620888B3
+P 4850 3150
+F 0 "U4" H 5278 3188 50  0000 L CNN
+F 1 "top_rail_v2" H 5278 3097 50  0000 L CNN
+F 2 "ARTS-Lab:top_rail_v2" H 4850 3150 50  0001 C CNN
+F 3 "" H 4850 3150 50  0001 C CNN
+	1    4850 3150
+	1    0    0    -1  
+$EndComp
+Connection ~ 4800 3400
+Wire Wire Line
+	4800 3400 4800 3500
 $EndSCHEMATC

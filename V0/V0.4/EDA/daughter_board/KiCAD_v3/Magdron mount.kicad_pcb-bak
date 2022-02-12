@@ -1159,7 +1159,7 @@
       (net 14 "Net-(U2-Pad4)"))
   )
 
-  (gr_text "DB V1.8" (at 165.481 131.9784) (layer F.SilkS)
+  (gr_text "DB V1.8" (at 164.338 126.238) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_line (start 194.691 93.599) (end 194.691 100.33) (layer Edge.Cuts) (width 0.05) (tstamp 5F93466C))
