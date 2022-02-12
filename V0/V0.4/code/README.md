@@ -1,14 +1,17 @@
-## data_collection
-1. Main program for base package with serial communication
-
 ## clock_calibration
-1. Calibrates the DS3231 to compiling time or a user defined time
+- calibrates the DS3231 to compiling time or a user defined time
+
+## data_collection
+- main program for base package with serial communication
+
+## EPM_data_collection
+- main program for EPM package acting as receiver
 
 ## magnet_toggle
-1. Uses serial commands to toggle EPM on and off
+- uses serial commands to toggle EPM on and off
 
 ## rf_controller
-1. Used with the RF controller PCB to configure a transmitter for the package
+- configures a transmitter for the package with the RF controller PCB
 
 
 
