@@ -3,11 +3,10 @@
  * This is the sketch that will run during deployment and take stage, temperature, pressure, humidity, and power
  * measurements. The data is saved on an SD card and collection occurs every five minutes as dictated by RTC alarms.
  * 
- * Written by Corinne Smith
- * July 9 2021
- * Modified from ArduinoGetStarted, www.ArduinoGetStarted.com
- * Modified from Dejan Nedelkowski, www.HowToMechatronics.com
- * Modified from ArduinoLearning, www.ArduinoLearning.com
+ * To change the data collection cycle interval: edit the const int time_interval
+ * 
+ * Written by Corinne Smith 
+ * Date: Jan 2022
 */
 
 #include <SD.h>                         // for SD card module
@@ -24,21 +23,21 @@
 #define SEALEVELPRESSURE_HPA (1013.25)  // constant for bme
 
 
-//HC-SR04 ----------------------------------------------------------------------------------------------
+// HC-SR04 ----------------------------------------------------------------------------------------------
 const int trigPin = 9;     
 const int echoPin = 8;      
 UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 
-//SD ---------------------------------------------------------------------------------------------------
+// SD ---------------------------------------------------------------------------------------------------
 const int pinCS = 10;
 
-//BME280 -----------------------------------------------------------------------------------------------
+// BME280 -----------------------------------------------------------------------------------------------
 Adafruit_BME280 bme;
 
-//INA219 -----------------------------------------------------------------------------------------------
+// INA219 -----------------------------------------------------------------------------------------------
 Adafruit_INA219 ina219;
 
-//controls ---------------------------------------------------------------------------------------------
+// controls ---------------------------------------------------------------------------------------------
 const int LED = A3;
 const int time_interval = 5;          // interval in which the minutes will be delayed. Default is five minutes
 unsigned long prevTimeElapsed = 0;
@@ -80,8 +79,8 @@ void setup() {
   time_t t;                               
   t = RTC.get();                            
   
-  // uncomment to set the time interval units to seconds
-//  if(second(t)<55){
+//  // uncomment to set the time interval units to seconds
+//  if(second(t)< 60 - time_interval){
 //    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
 //  }
 //  else {
@@ -89,7 +88,7 @@ void setup() {
 //  }
   
   // uncomment to set the time interval units to minutes
-  if (minute(t) < 55) {
+  if (minute(t) < 60 - time_interval) {
     RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) + time_interval, 0, 0);
   }
   else {
@@ -132,8 +131,8 @@ void goSleep() {
   time_t t;
   t = RTC.get();
   
-  // uncomment to set the time interval units to seconds
-//  if(second(t)<55){
+//  // uncomment to set the time interval units to seconds
+//  if(second(t)< 60 - time_interval){
 //    RTC.setAlarm(ALM1_MATCH_SECONDS , second(t)+time_interval, 0, 0, 0);
 //  }
 //  else {
@@ -141,7 +140,7 @@ void goSleep() {
 //  }
   
   // uncomment to set the time interval units to minutes
-  if (minute(t) < 55) {
+  if (minute(t) < 60 - time_interval) {
     RTC.setAlarm(ALM1_MATCH_MINUTES , 0, minute(t) + time_interval, 0, 0);
   }
   else {
