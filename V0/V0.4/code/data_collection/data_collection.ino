@@ -19,7 +19,7 @@
 #include <Adafruit_BME280.h>            // for BME
 #include <Adafruit_INA219.h>            // for voltage monitor
 
-#define RTCinterrupt 2                  // RTC interrupt from sleep mode on digital pin 2
+const int RTCinterrupt = 2;             // RTC interrupt from sleep mode on digital pin 2
 #define SEALEVELPRESSURE_HPA (1013.25)  // constant for bme
 
 
@@ -120,7 +120,7 @@ void goSleep() {
 
   // activate sleep mode, attach interrupt and assign a waking function to run
   sleep_enable();                               
-  attachInterrupt(RTCinterrupt, RTCtrigger, LOW);
+  attachInterrupt(digitalPinToInterrupt(RTCinterrupt), RTCtrigger, LOW);
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);              // set to full sleep mode   
   sleep_cpu();                                  
 
@@ -156,7 +156,7 @@ void RTCtrigger() {
   Serial.println("RTC interrupt fired");
   delay(100);
   sleep_disable();                        // disable sleep mode
-  detachInterrupt(RTCinterrupt);          // clear the interrupt flag
+  detachInterrupt(digitalPinToInterrupt(RTCinterrupt));          // clear the interrupt flag
 }
 
 void logData() {

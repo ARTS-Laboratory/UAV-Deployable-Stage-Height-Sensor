@@ -22,8 +22,8 @@
 #include <Adafruit_BME280.h>            // for BME
 #include <Adafruit_INA219.h>            // for voltage monitor
 
-#define RTCinterrupt 2                  // RTC interrupt from sleep mode on digital pin 2 (INT_0)
-#define nRFinterrupt 3                  // nRF interrupt from sleep mode on digital pin 3 (INT_1)
+const int RTCinterrupt = 2;             // RTC interrupt from sleep mode on digital pin 2 (INT_0)
+const int nRFinterrupt = 3;             // nRF interrupt from sleep mode on digital pin 3 (INT_1)
 #define SEALEVELPRESSURE_HPA (1013.25)  // constant for bme
 
 // nRF24L01 -------------------------------------------------------------------------------------------
@@ -149,8 +149,8 @@ void goSleep() {
 
   // activate sleep mode, attach interrupt and assign a waking function to run
   sleep_enable();                               
-  attachInterrupt(RTCinterrupt, RTCtrigger, LOW);
-  attachInterrupt(nRFinterrupt, nRFtrigger, LOW);
+  attachInterrupt(digitalPinToInterrupt(RTCinterrupt), RTCtrigger, LOW);
+  attachInterrupt(digitalPinToInterrupt(nRFinterrupt), nRFtrigger, LOW);
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);              // set to full sleep mode   
   sleep_cpu();                                  
 
@@ -193,13 +193,13 @@ void RTCtrigger() {
   Serial.println("RTC interrupt fired");
   delay(100);
   sleep_disable();                        // disable sleep mode
-  detachInterrupt(RTCinterrupt);          // clear the interrupt flag
+  detachInterrupt(digitalPinToInterrupt(RTCinterrupt));          // clear the interrupt flag
 }
 
 void nRFtrigger() {                             
 // this is the wake up function to run once the nRF interrupt is fired
   sleep_disable();
-  detachInterrupt(nRFinterrupt);
+  detachInterrupt(digitalPinToInterrupt(nRFinterrupt));
   delay(2000);
   
   // determines if interrupt was caused by a transmission (tx), transmission failure (fail), or reception (rx)
