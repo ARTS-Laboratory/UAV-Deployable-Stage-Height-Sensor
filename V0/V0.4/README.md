@@ -2,7 +2,7 @@
 
 
 <p align="center">
-<img src="figures/pdf_figures/graphical_abstract.pdf" alt="drawing" width="600"/>
+<img src="figures/graphical_abstract.png" alt="drawing" width="600"/>
 </p>
 
 
