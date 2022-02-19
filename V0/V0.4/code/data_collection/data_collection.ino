@@ -49,7 +49,7 @@ void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(RTCinterrupt, INPUT_PULLUP);            // configure the interrupt pin using the built-in pullup resistor
-  Serial.println("Executing USS6_serial.ino");
+  Serial.println("Executing data_collection.ino");
 
   // SD card initialization --------------------------------------------------------------------------------------------------------------------------
   if (!SD.begin())                               

@@ -65,7 +65,7 @@ void setup() {
   pinMode(PC, OUTPUT);
   pinMode(MAG, OUTPUT);
   pinMode(RTCinterrupt, INPUT_PULLUP);            // configure the interrupt pin using the built-in pullup resistor
-  Serial.println("Executing USS6_serial.ino");
+  Serial.println("Executing EPM_data_collection.ino");
 
   // SD card initialization --------------------------------------------------------------------------------------------------------------------------
   if (!SD.begin())                               
