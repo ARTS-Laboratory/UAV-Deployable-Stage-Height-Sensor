@@ -2,10 +2,7 @@
 
 
 <p align="center">
-<img src="figures/pdf_figures/garphical_abstract.pdf" alt="drawing" width="600"/>
-</p>
-<p align="center">
-Figure 1: Drone delivering a sensor package underneath a structure.
+<img src="figures/pdf_figures/graphical_abstract.pdf" alt="drawing" width="600"/>
 </p>
 
 
