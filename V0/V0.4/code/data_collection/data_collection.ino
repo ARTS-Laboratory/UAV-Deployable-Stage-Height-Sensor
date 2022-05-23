@@ -192,7 +192,7 @@ void logData() {
   float power_mW = ina219.getPower_mW();
 
   // print the data to the file that will be saved on the SD card
-  File myFile = SD.open("data_headers.csv", FILE_WRITE);    // change to the file name you want to store the data
+  File myFile = SD.open("001.csv", FILE_WRITE);    // change to the file name you want to store the data
 
   if (myFile)                             // tests if the file has opened
   {
