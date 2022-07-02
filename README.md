@@ -38,7 +38,7 @@ Cite as:
 @Misc{Smith2022UAVDeployableStage,     
   author = {Corinne Smith and Austin Downey},  
   howpublished = {GitHub},  
-  title  = {UAV Deployable Stage Height Sensor},
+  title  = {{UAV} Deployable Stage Height Sensor},
   year   = {2022},  
   groups = {{ARTS-L}ab},    
   url    = {https://github.com/ARTS-Laboratory/UAV-Deployable-Stage-Height-Sensor},   
