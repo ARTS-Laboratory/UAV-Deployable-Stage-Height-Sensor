@@ -35,11 +35,10 @@ This work is licensed under a
 
 Cite as:
 
-@Misc{Smith2022UAVDeployableStage,     
-  author = {Corinne Smith and Austin Downey},  
+@Misc{ARTSLabUavDeployableStage,     
+  author = {{ARTS-L}ab},  
   howpublished = {GitHub},  
-  title  = {{UAV} Deployable Stage Height Sensor},
-  year   = {2022},  
+  title  = {{UAV} Deployable Stage Height Sensor}, 
   groups = {{ARTS-L}ab},    
   url    = {https://github.com/ARTS-Laboratory/UAV-Deployable-Stage-Height-Sensor},   
 }
