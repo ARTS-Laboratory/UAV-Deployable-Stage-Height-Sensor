@@ -1,4 +1,4 @@
-# magDrone / Hydrologic Parameters
+# Gerogetown
 UAV deployable sensor package for measuring water height. 
 
 ## V0.1
