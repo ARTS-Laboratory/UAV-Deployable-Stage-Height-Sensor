@@ -20,6 +20,12 @@ UAV deployable sensor package for measuring water height.
 3. No accelerometer on daughter board
 4. Solar panel load sharing on daughter board
 
+## V0.5
+1. Arduino Nano microcontroller
+2. Uses permanent magnet to attach to steel structures
+3. Easy sliding water-proof clear tube 
+
+
 
 
 
