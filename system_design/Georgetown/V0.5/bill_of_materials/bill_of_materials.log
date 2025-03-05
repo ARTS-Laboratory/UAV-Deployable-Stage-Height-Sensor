@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.10.23)  28 FEB 2025 15:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.10.23)  5 MAR 2025 16:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1262,8 +1262,8 @@ Underfull \hbox (badness 1418) in paragraph at lines 98--98
  []
 
 
-Overfull \hbox (4.62909pt too wide) in paragraph at lines 100--100
-[]|\OT1/txr/m/n/10.95 nRF24L01+| 
+Overfull \hbox (7.06pt too wide) in paragraph at lines 100--100
+[]|\OT1/txr/m/n/10.95 NRF24L01+| 
  []
 
 
@@ -1308,27 +1308,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 108--108
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 110--110
-[]|\OT1/txr/m/n/10.95 Electro-
+[]|\OT1/txr/m/n/10.95 N42 per-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 110--110
-\OT1/txr/m/n/10.95 permanent
+\OT1/txr/m/n/10.95 ma-nent
  []
 
 
-Underfull \hbox (badness 6842) in paragraph at lines 110--110
-[]|\OT1/txr/m/n/10.95 OPENGRAB EPM V3
- []
-
-
-Overfull \hbox (1.6597pt too wide) in paragraph at lines 110--110
-[]|\OT1/txr/m/n/10.95 159.99| 
- []
-
-
-Overfull \hbox (1.6597pt too wide) in paragraph at lines 110--110
-[]|\OT1/txr/m/n/10.95 159.99| 
+Underfull \hbox (badness 10000) in paragraph at lines 110--110
+[]|\OT1/txr/m/n/10.95 K&J Mag-
  []
 
 
@@ -1553,10 +1543,10 @@ Package rerunfilecheck Info: File `bill_of_materials.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 30244 strings out of 474486
- 598441 string characters out of 5744226
+ 30240 strings out of 474486
+ 598396 string characters out of 5744226
  1980542 words of memory out of 5000000
- 52031 multiletter control sequences out of 15000+600000
+ 52027 multiletter control sequences out of 15000+600000
  576224 words of font info for 82 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  99i,10n,131p,471b,1068s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1565,7 +1555,7 @@ Here is how much of TeX's memory you used:
 xr.pfb><C:/Users/DRH6/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8
 a.pfb><C:/Users/DRH6/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a
 .pfb>
-Output written on bill_of_materials.pdf (2 pages, 41701 bytes).
+Output written on bill_of_materials.pdf (2 pages, 41383 bytes).
 PDF statistics:
  40 PDF objects out of 1000 (max. 8388607)
  4 named destinations out of 1000 (max. 500000)
