@@ -2,7 +2,7 @@
 
 
 <p align="center">
-<img src="figures/overview.png" alt="drawing" />
+<img src="figures/overview.png" alt="drawing" style="width:200px;"/>
 </p>
 
 
