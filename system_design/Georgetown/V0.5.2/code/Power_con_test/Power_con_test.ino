@@ -1,4 +1,3 @@
-
 #include <Wire.h>                       // for I2C
 #include <HCSR04.h>                     // for the USS
 #include <DS3232RTC.h>                  // for the RTC https://github.com/JChristensen/DS3232RTC

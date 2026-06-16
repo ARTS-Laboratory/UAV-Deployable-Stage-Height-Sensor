@@ -5,12 +5,10 @@
 #include <HCSR04.h>                     // for the USS
 #include <DS3232RTC.h>                  // for the RTC https://github.com/JChristensen/DS3232RTC
 DS3232RTC RTC;
-#include <avr/sleep.h>                  // for sleep mode
+
 #include <Adafruit_Sensor.h>            // for BME 
 #include <Adafruit_BME280.h>            // for BME
-#include <Adafruit_INA219.h>            // for voltage monitor
 
-const int RTCinterrupt = 2;             // RTC interrupt from sleep mode on digital pin 2
 #define SEALEVELPRESSURE_HPA (1013.25)  // constant for bme
 
 
@@ -28,8 +26,7 @@ const int rfpinCS = 7;
 // BME280 -----------------------------------------------------------------------------------------------
 Adafruit_BME280 bme;
 
-// INA219 -----------------------------------------------------------------------------------------------
-Adafruit_INA219 ina219;
+
 
 // controls ---------------------------------------------------------------------------------------------
 const int LED = A3;
@@ -42,8 +39,7 @@ void setup() {
   pinMode(LED, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  pinMode(RTCinterrupt, INPUT_PULLUP);  // configure the interrupt pin using the built-in pullup resistor
-
+ 
   // SD card initialization --------------------------------------------------------------------------------------------------------------------------
   Serial.println("Checking SD card...");
   delay(500);
@@ -57,21 +53,7 @@ void setup() {
     Serial.println("SD card OK");
   }
 
-  Serial.println("Checking INA219...");
-  // Voltage regulator initialization -----------------------------------------------------------------------------------------------------------------
-  //uint32_t currentFrequency;
-
-  if (!ina219.begin())
-  {
-    digitalWrite(LED, HIGH);            // LED remains on if SD card does not work
-    Serial.println("INA219 error");
-  }
-  else
-  {
-    Serial.println("INA219 OK");
-  }
-  ina219.setCalibration_16V_400mA(); //for 0.1 ohm shunt res used
-  delay(10);
+  
 
   // BME initialization ------------------------------------------------------------------------------------------------------------------------------
   Serial.println("Checking BME280...");
@@ -133,10 +115,7 @@ void logData() {
   float pressure = bme.readPressure() / 100.0F;
   delay(50);
 
-  // record the voltage, current, and power draw from the LiPo
-  float busvoltage = ina219.getBusVoltage_V();
-  float current_mA = ina219.getCurrent_mA();
-  float power_mW = ina219.getPower_mW();
+
 
   // print the data to the file that will be saved on the SD car
 
@@ -162,11 +141,6 @@ void logData() {
   Serial.print(temp); Serial.print(",");
   Serial.print(humidity); Serial.print(",");
   Serial.print(pressure); Serial.print(",");
-
-  // write the power data
-  Serial.print(busvoltage); Serial.print(",");
-  Serial.print(current_mA); Serial.print(",");
-  Serial.print(power_mW); Serial.print(",");
 
   Serial.println("");
   ////Serial.print("Complete! Elapsed time: "); ////Serial.print(timeElapsed - prevTimeElapsed); ////Serial.println(" ms");
