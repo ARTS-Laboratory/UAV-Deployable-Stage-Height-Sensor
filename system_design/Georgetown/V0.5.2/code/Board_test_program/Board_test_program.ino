@@ -11,6 +11,9 @@ DS3232RTC RTC;
 
 #define SEALEVELPRESSURE_HPA (1013.25)  // constant for bme
 
+const int powerLatchPin = 4;           // HIGH = Cut Power / LOW = Keep Power On
+
+unsigned long alarmInterval = 5;
 
 // HC-SR04 ----------------------------------------------------------------------------------------------
 const int trigPin = 9;
@@ -30,15 +33,17 @@ Adafruit_BME280 bme;
 
 // controls ---------------------------------------------------------------------------------------------
 const int LED = A3;
-constexpr time_t alarmInterval{10 * 60}; // wake up interval in seconds
+
 unsigned long prevTimeElapsed = 0;
 
 void setup() {
   Serial.begin(9600);
   pinMode(pinCS, OUTPUT);
+  pinMode(powerLatchPin, OUTPUT);
   pinMode(LED, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  digitalWrite(powerLatchPin, LOW); 
  
   // SD card initialization --------------------------------------------------------------------------------------------------------------------------
   Serial.println("Checking SD card...");
@@ -71,21 +76,52 @@ void setup() {
    // RTC initializaiton ------------------------------------------------------------------------------------------------------------------------------
   // initialize the alarms to known values, clear the alarm flags, clear the alarm interrupt flags
   RTC.begin();
-
+  RTC.setAlarm(DS3232RTC::ALM1_MATCH_DATE, 0, 0, 0, 1);
+  RTC.setAlarm(DS3232RTC::ALM2_MATCH_DATE, 0, 0, 0, 1);
+  RTC.alarm(DS3232RTC::ALARM_1);
+  RTC.alarm(DS3232RTC::ALARM_2);
+  RTC.alarmInterrupt(DS3232RTC::ALARM_1, false);
+  RTC.alarmInterrupt(DS3232RTC::ALARM_2, false);
+  RTC.squareWave(DS3232RTC::SQWAVE_NONE);
+  
   // get the current time from the RTC and set an alarm according to the time interval
+                            
+  time_t t = RTC.get();                            
+  time_t a = t + alarmInterval - t % alarmInterval;
+  if (a <= t) a += alarmInterval;
+  // set the alarm
+  RTC.setAlarm(DS3232RTC::ALM1_MATCH_HOURS, second(a), minute(a), hour(a), 0);
+  RTC.alarm(DS3232RTC::ALARM_1);    // clear the alarm flag
+  RTC.alarmInterrupt(DS3232RTC::ALARM_1, true);
 
-  time_t t = RTC.get();
 }
 
 void loop() {
   digitalWrite(LED, LOW);     // turn off LED before sleeping
   delay(10);
-  logData();
+  for(int i=0;i<=5;i++){
+    logData();
+  }
+  power_off();
 }
 
 
 
+void power_off() {
+  delay(100);                               
+                          
+  // Set next alarm
+  time_t a = RTC.get() + alarmInterval;
+  RTC.setAlarm(DS3232RTC::ALM1_MATCH_HOURS, second(a), minute(a), hour(a), 0);
+  RTC.alarm(DS3232RTC::ALARM_1);               // Clear current alarm flag
+  RTC.alarmInterrupt(DS3232RTC::ALARM_1, true); // Re-enable interrupt pin
+  RTC.writeRTC(0x0E, 0x45);                     // Set BBSQW = 1 so alarm works on coincell battery
 
+  delay(50);      // Give hardware a moment to stabilize
+
+  pinMode(powerLatchPin, OUTPUT);
+  digitalWrite(powerLatchPin, HIGH); // Pushing this HIGH actively cuts the power module
+}
 
 
 void logData() {
