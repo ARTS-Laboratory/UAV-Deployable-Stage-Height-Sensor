@@ -9485,7 +9485,7 @@
 				)
 			)
 		)
-		(property "Value" "~"
+		(property "Value" "psw03c"
 			(at 170.815 48.26 0)
 			(effects
 				(font
