@@ -1,6 +1,5 @@
 # Georgetown
-UAV deployable sensor package for measuring water height. This document lists the updates made to the sensor pacakge over time. Present version: V0.5.2
-
+UAV deployable sensor package for measuring water height. This document lists the updates made to the sensor pacakge over time.
 ## V0.1
 1. Oldest version
 2. Basic datalogger setup with modular RTC and SD card
@@ -32,9 +31,10 @@ UAV deployable sensor package for measuring water height. This document lists th
 ## V0.5.1
 1. Minor design updates in PCB from V0.5.
 
-## V0.5.2
+## V0.5.2 (present version)
 1. Major power electronics update from V0.5.1
-2. Uses Mosfet based switching to turn off device during sleep. Wakes up using RTC interrupt. Resulting in very low power consumption and longer deployment time. 
+2. Uses Mosfet based switching to turn off device during sleep. Wakes up using RTC interrupt. Resulting in very low power consumption and longer deployment time.
+3. Sensing features: Water level distance from sensor, Humidity, temperature, pressure, battery voltage (recorded against RTC time)
 
 ## V0.6 (Proposed)
 1.  Back to being UAV deployable using [this system](https://github.com/ARTS-Laboratory/UAV-Understructure-Sensor-Deployment-and-Recovery-System).
