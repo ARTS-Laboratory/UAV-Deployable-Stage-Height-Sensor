@@ -1,5 +1,5 @@
-# Gerogetown
-UAV deployable sensor package for measuring water height. 
+# Georgetown
+UAV deployable sensor package for measuring water height. This document lists the updates made to the sensor pacakge over time. Present version: V0.5.2
 
 ## V0.1
 1. Oldest version
@@ -21,16 +21,24 @@ UAV deployable sensor package for measuring water height.
 4. Solar panel load sharing on daughter board
 
 ## V0.5
-1. Arduino Nano microcontroller
-2. Uses dynamic sleep interval depending on battery voltage level
-3. Uses permanent magnet to attach to steel structures
-4. Easy sliding water-proof clear tube
+1. Major CAD and PCB update from V0.4
+2. Microcontroller : Arduino Nano
+3. Solar panels moved to the bottom of the sensor package
+4. BMS added to manage solar load sharing in main PCB, daughter PCB eliminated
+5. Uses dynamic sleep interval depending on battery voltage level
+6. Uses permanent magnet to attach to steel structures
+7. Easy sliding water-proof clear tube
+
+## V0.5.1
+1. Minor design updates in PCB from V0.5.
+
+## V0.5.2
+1. Major power electronics update from V0.5.1
+2. Uses Mosfet based switching to turn off device during sleep. Wakes up using RTC interrupt. Resulting in very low power consumption and longer deployment time. 
 
 ## V0.6 (Proposed)
-### Power electronics upgrade from V0.5
 1.  Back to being UAV deployable using [this system](https://github.com/ARTS-Laboratory/UAV-Understructure-Sensor-Deployment-and-Recovery-System).
-2.  Uses [buck converter](https://www.mouser.com/ProductDetail/Texas-Instruments/TPSM84203EAB?qs=EU6FO9ffTwdvD6IyQBtt5A%3D%3D&mgh=1&utm_id=22370133501&utm_source=google&utm_medium=cpc&utm_marketing_tactic=amercorp&gad_source=1&gad_campaignid=22380187564&gbraid=0AAAAADn_wf2gWZzSurQARsbyVMmz_4UDQ&gclid=Cj0KCQjw4qHEBhCDARIsALYKFNO-ZgKxWQY3H1w5GanZ_Tstxw3fUVWm0au9QuEBnVr6LlNByRsZf7YaAo9nEALw_wcB) instead of linear voltage regulator
-3. Uses module that has [single ultra sound transducer](https://cdn.shopify.com/s/files/1/0550/8091/0899/files/11832.pdf?v=1726578772) to lower current consumption.
+2. Uses module that has [single ultra sound transducer](https://cdn.shopify.com/s/files/1/0550/8091/0899/files/11832.pdf?v=1726578772) to lower current consumption.
 
 
 
