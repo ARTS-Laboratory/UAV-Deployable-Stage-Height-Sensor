@@ -8,7 +8,7 @@
 
 ## System diagram
 <p align="center">
-<img src="figures/electronics.png" alt="drawing" style="width:800px;"/>
+<img src="figures/electronics.jpg" alt="drawing" style="width:800px;"/>
 </p>
 
 ## V0.5 PCB Top side
