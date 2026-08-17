@@ -28,14 +28,14 @@ float busvoltage;
 
 const int powerLatchPin = 4;           // HIGH = Cut Power / LOW = Keep Power On
 
-unsigned long alarmInterval = 10*60; // 10 min default
+unsigned long alarmInterval = 10; // 10 min default
 unsigned long prevTimeElapsed = 0;
 
 // Returns the sleep interval in seconds based on LiPo voltage
 unsigned long getDynamicInterval(float voltage) {
-  if (voltage >= 8) return 10*60;        // 15 min
-  else if (voltage >= 7.4) return 10*60;  // 15 min
-  else return 10*60;                  // 15 hours
+  if (voltage >= 8) return 10;        // 15 min
+  else if (voltage >= 7.4) return 10;  // 15 min
+  else return 10;                  // 15 hours
 }
 
 void setup() {
